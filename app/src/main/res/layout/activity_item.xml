@@ -2,12 +2,20 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/layout_border"
+    android:layout_marginTop="@dimen/act_item_paddTop"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
         android:id="@+id/activityTxtView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingStart="@dimen/act_item_paddSide"
+        android:paddingLeft="@dimen/act_item_paddSide"
+        android:paddingEnd="@dimen/act_item_paddSide"
+        android:paddingRight="@dimen/act_item_paddSide"
+        android:paddingTop="@dimen/act_item_paddTop"
+        android:paddingBottom="@dimen/act_item_paddTop"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 

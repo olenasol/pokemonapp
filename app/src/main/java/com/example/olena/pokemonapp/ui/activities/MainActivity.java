@@ -16,11 +16,7 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         replaceFragment(PokemonListFragment.getInstance(),true);
     }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return true;
-    }
+
 
     @Override
     public void replaceFragment(BaseFragment fragment, boolean addToBackStack) {

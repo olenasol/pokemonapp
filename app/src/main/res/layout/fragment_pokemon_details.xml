@@ -7,19 +7,21 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="@dimen/margin_details">
 
 
         <ImageView
             android:id="@+id/pokemonImgViewDetails"
-            android:layout_width="match_parent"
+            android:layout_width="@dimen/img_pokemon_width"
             android:layout_height="@dimen/img_pokemon_height" />
 
         <TextView
             android:id="@+id/pokemonNameTxtDetails"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_large"
             android:text="Name" />
 
         <LinearLayout
@@ -30,12 +32,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/weight" />
+                android:text="@string/weight"
+                android:textSize="@dimen/text_size_normal"/>
 
             <TextView
                 android:id="@+id/weightTxt"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_normal"/>
         </LinearLayout>
 
         <LinearLayout
@@ -46,18 +50,21 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/height" />
+                android:text="@string/height"
+                android:textSize="@dimen/text_size_normal"/>
 
             <TextView
                 android:id="@+id/heightTxt"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_normal"/>
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/activitiesResView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layoutAnimation="@anim/layout_animation_right_to_left"/>
 
     </LinearLayout>
 </ScrollView>

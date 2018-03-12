@@ -2,12 +2,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/lightPeach"
     tools:context="com.example.olena.pokemonapp.ui.fragments.PokemonListFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/pokemonListRecycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/lightPeach"
+        android:layoutAnimation="@anim/layout_animation_fall_down"
         android:visibility="gone"/>
     <ProgressBar
         android:id="@+id/progressBar"

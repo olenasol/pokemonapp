@@ -2,5 +2,16 @@
 <resources>
     <dimen name="pokemon_image_size">100dp</dimen>
     <dimen name="text_size_normal">24sp</dimen>
-    <dimen name="img_pokemon_height">300dp</dimen>
+    <dimen name="img_pokemon_height">200dp</dimen>
+    <dimen name="card_elevation">30dp</dimen>
+    <dimen name="card_radius">30dp</dimen>
+    <dimen name="pokemon_item_margin">10dp</dimen>
+    <dimen name="pokemon_img_padd_start">40dp</dimen>
+    <dimen name="text_name_padd_left">60dp</dimen>
+    <dimen name="mg_margin_start">40dp</dimen>
+    <dimen name="img_pokemon_width">200dp</dimen>
+    <dimen name="text_size_large">48sp</dimen>
+    <dimen name="margin_details">30dp</dimen>
+    <dimen name="act_item_paddSide">30dp</dimen>
+    <dimen name="act_item_paddTop">5dp</dimen>
 </resources>

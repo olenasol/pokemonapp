@@ -8,9 +8,13 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.ProgressBar;
 
 import com.example.olena.pokemonapp.R;
@@ -28,7 +32,6 @@ public class PokemonListFragment extends BaseFragment<PokemonListPresenter>  imp
     @BindView(R.id.pokemonListRecycler) RecyclerView pokemonListView;
     @BindView(R.id.progressBar) ProgressBar progressBar;
     private Unbinder unbinder;
-    private RecyclerView.Adapter recyclerViewAdapter;
 
     public static BaseFragment getInstance() {
         return new PokemonListFragment();
@@ -56,7 +59,7 @@ public class PokemonListFragment extends BaseFragment<PokemonListPresenter>  imp
         unbinder = ButterKnife.bind(this,view);
         setHasOptionsMenu(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-        recyclerViewAdapter = new PokemonRecyclerAdapter(presenter);
+        RecyclerView.Adapter recyclerViewAdapter = new PokemonRecyclerAdapter(presenter);
 
         pokemonListView.setLayoutManager(layoutManager);
         pokemonListView.setAdapter(recyclerViewAdapter);
@@ -65,7 +68,11 @@ public class PokemonListFragment extends BaseFragment<PokemonListPresenter>  imp
 
     @Override
     public void notifyAdapterSetChanged() {
-        recyclerViewAdapter.notifyDataSetChanged();
+        LayoutAnimationController controller =
+                AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_fall_down);
+        pokemonListView.setLayoutAnimation(controller);
+        pokemonListView.getAdapter().notifyDataSetChanged();
+        pokemonListView.scheduleLayoutAnimation();
     }
 
     @Override
@@ -80,7 +87,11 @@ public class PokemonListFragment extends BaseFragment<PokemonListPresenter>  imp
         pokemonListView.setVisibility(View.VISIBLE);
     }
 
-
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu, menu);
+        super.onCreateOptionsMenu(menu,inflater);
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
