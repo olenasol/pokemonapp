@@ -1,21 +1,20 @@
 package com.example.olena.pokemonapp.presenter;
 
-import android.content.Context;
-
 import com.example.olena.pokemonapp.model.PokemonComplexItem;
-import com.example.olena.pokemonapp.ui.PokemonViewHolder;
 import com.example.olena.pokemonapp.view.PokemonRowView;
 
+import java.io.IOException;
 import java.util.List;
 
-/**
- * Created by olena on 3/5/2018.
- */
-
-public interface PokemonListPresenter {
-    void onBindPokemonRowViewAtPosition(int position, PokemonRowView holder, Context context);
+public interface PokemonListPresenter extends BasePresenter{
+    void onBindPokemonRowViewAtPosition(int position, PokemonRowView holder);
 
     int getPokemonRowsCount();
 
-    void fillInPokemonList(List<PokemonComplexItem> list);
+    void processPokemonList(List<PokemonComplexItem> list);
+
+    void getPokemonList();
+
+    void refetchPokemonsFromServer();
+
 }

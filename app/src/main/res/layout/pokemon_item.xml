@@ -4,56 +4,31 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/pokemonImgView"
-        android:layout_width="@dimen/pokemon_image_size"
-        android:layout_height="@dimen/pokemon_image_size"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardViewPokemon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/pokemonNameTxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Name"
-        android:textSize="@dimen/text_size_normal"
-        app:layout_constraintStart_toEndOf="@id/pokemonImgView"
-        app:layout_constraintTop_toTopOf="parent" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:id="@+id/heightLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toEndOf="@id/pokemonImgView"
-        app:layout_constraintTop_toBottomOf="@id/pokemonNameTxt">
+            <ImageView
+                android:id="@+id/pokemonImgView"
+                android:layout_width="@dimen/pokemon_image_size"
+                android:layout_height="@dimen/pokemon_image_size"
+                android:contentDescription="@string/pokemon_image"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/height" />
-        <TextView
-            android:id="@+id/heightTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="222"/>
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/weightLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toEndOf="@id/pokemonImgView"
-        app:layout_constraintTop_toBottomOf="@id/heightLayout">
+            <TextView
+                android:id="@+id/pokemonNameTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_normal"
+                app:layout_constraintStart_toEndOf="@id/pokemonImgView"
+                app:layout_constraintTop_toTopOf="parent" />
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v7.widget.CardView>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/weight" />
-        <TextView
-            android:id="@+id/weightTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="222"/>
-    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

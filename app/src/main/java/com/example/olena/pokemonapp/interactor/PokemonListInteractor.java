@@ -1,13 +1,17 @@
 package com.example.olena.pokemonapp.interactor;
 
+import com.example.olena.pokemonapp.database.AppDatabase;
 import com.example.olena.pokemonapp.model.PokemonComplexItem;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
-/**
- * Created by olena on 3/5/2018.
- */
+public interface PokemonListInteractor extends BaseInteractor{
 
-public interface PokemonListInteractor {
     void retrieveListOfComplexPokemons();
+
+    void fillPokemonDb(AppDatabase appDatabase, List<PokemonComplexItem> list);
+
+    List<PokemonComplexItem> getPokemonsFromDb(AppDatabase appDatabase) throws ExecutionException,
+            InterruptedException;
 }

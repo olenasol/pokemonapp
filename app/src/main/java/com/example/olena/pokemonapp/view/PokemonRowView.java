@@ -1,14 +1,14 @@
 package com.example.olena.pokemonapp.view;
 
 import android.content.Context;
+import android.view.View;
 
-/**
- * Created by olena on 3/5/2018.
- */
+import com.example.olena.pokemonapp.model.PokemonComplexItem;
 
 public interface PokemonRowView {
     void setPokemonNameText(String pokemonName);
-    void setPokemonHeightText(String pokemonHeight);
-    void setPokemonWeightText(String pokemonWeight);
-    void setPokemonImg(String pokemonImgUrl, Context context);
+
+    void setPokemonImg(PokemonComplexItem complexItem, Context context);
+
+    void setPokemonItemOnClick(View.OnClickListener onClick);
 }

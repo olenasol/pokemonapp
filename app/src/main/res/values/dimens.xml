@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="pokemon_image_size">100dp</dimen>
-    <dimen name="text_size_normal">24dp</dimen>
+    <dimen name="text_size_normal">24sp</dimen>
+    <dimen name="img_pokemon_height">300dp</dimen>
 </resources>

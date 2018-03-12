@@ -1,9 +1,10 @@
 package com.example.olena.pokemonapp.view;
 
-/**
- * Created by olena on 3/5/2018.
- */
 
-public interface PokemonListView {
+public interface PokemonListView extends BaseView {
     void notifyAdapterSetChanged();
+
+    void setProgressbarVisible();
+
+    void setRecyclerViewVisible();
 }

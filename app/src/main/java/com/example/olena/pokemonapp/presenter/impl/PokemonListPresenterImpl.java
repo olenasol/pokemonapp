@@ -1,72 +1,43 @@
 package com.example.olena.pokemonapp.presenter.impl;
 
-import android.content.Context;
+import android.view.View;
 
+import com.example.olena.pokemonapp.database.AppDatabase;
 import com.example.olena.pokemonapp.interactor.PokemonListInteractor;
 import com.example.olena.pokemonapp.interactor.impl.PokemonListInteractorImpl;
 import com.example.olena.pokemonapp.model.PokemonComplexItem;
-import com.example.olena.pokemonapp.model.SpritePokemon;
 import com.example.olena.pokemonapp.presenter.PokemonListPresenter;
-import com.example.olena.pokemonapp.ui.MainActivity;
+import com.example.olena.pokemonapp.ui.fragments.PokemonDetailsFragment;
 import com.example.olena.pokemonapp.view.PokemonListView;
 import com.example.olena.pokemonapp.view.PokemonRowView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
-/**
- * Created by olena on 3/5/2018.
- */
+public class PokemonListPresenterImpl extends BasePresenterImpl<PokemonListView, PokemonListInteractor>
+        implements PokemonListPresenter {
 
-public class PokemonListPresenterImpl implements PokemonListPresenter {
-
-    private PokemonListView pokemonListView;
-    private PokemonListInteractor pokemonListInteractor;
     private List<PokemonComplexItem> listOfPokemons;
 
     public PokemonListPresenterImpl(PokemonListView pokemonListView) {
-        this.pokemonListView = pokemonListView;
-        this.pokemonListInteractor = new PokemonListInteractorImpl(this);
-       // listOfPokemons = getMockdedList();// new ArrayList<>();
+        this.view = pokemonListView;
+        this.interactor = new PokemonListInteractorImpl(this);
         listOfPokemons = new ArrayList<>();
-        pokemonListInteractor.retrieveListOfComplexPokemons();
     }
 
-    public List<PokemonComplexItem> getMockdedList() {
-        List<PokemonComplexItem> list =new ArrayList<>();
-        list.add(new PokemonComplexItem("bulbasaur",69,7,
-                new SpritePokemon("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png")));
-        list.add(new PokemonComplexItem("ivysaur",130,10,
-                new SpritePokemon("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png")));
-        list.add(new PokemonComplexItem("bulbasaur",69,7,
-                new SpritePokemon("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png")));
-        list.add(new PokemonComplexItem("bulbasaur",69,7,
-                new SpritePokemon("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png")));
-        list.add(new PokemonComplexItem("ivysaur",130,10,
-                new SpritePokemon("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png")));
-        list.add(new PokemonComplexItem("bulbasaur",69,7,
-                new SpritePokemon("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png")));
-        list.add(new PokemonComplexItem("bulbasaur",69,7,
-                new SpritePokemon("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png")));
-        list.add(new PokemonComplexItem("ivysaur",130,10,
-                new SpritePokemon("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png")));
-        list.add(new PokemonComplexItem("bulbasaur",69,7,
-                new SpritePokemon("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png")));
-        list.add(new PokemonComplexItem("bulbasaur",69,7,
-                new SpritePokemon("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png")));
-        list.add(new PokemonComplexItem("ivysaur",130,10,
-                new SpritePokemon("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png")));
-        list.add(new PokemonComplexItem("bulbasaur",69,7,
-                new SpritePokemon("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png")));
-        return list;
-    }
     @Override
-    public void onBindPokemonRowViewAtPosition(int position, PokemonRowView holder, Context context) {
-        PokemonComplexItem pokemonComplexItem = listOfPokemons.get(position);
+    public void onBindPokemonRowViewAtPosition(int position, PokemonRowView holder) {
+        final PokemonComplexItem pokemonComplexItem = listOfPokemons.get(position);
         holder.setPokemonNameText(pokemonComplexItem.getPokemonName());
-        holder.setPokemonHeightText(String.valueOf(pokemonComplexItem.getPokemonHight()));
-        holder.setPokemonWeightText(String.valueOf(pokemonComplexItem.getPokemonWeight()));
-        holder.setPokemonImg(pokemonComplexItem.getSpritePokemon().getFrontDefault(),context);
+        holder.setPokemonImg(pokemonComplexItem, context());
+        holder.setPokemonItemOnClick(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                view.replaceFragment(PokemonDetailsFragment.getInstance(pokemonComplexItem.getPokemonId()),
+                true);
+            }
+        });
     }
 
     @Override
@@ -75,11 +46,47 @@ public class PokemonListPresenterImpl implements PokemonListPresenter {
     }
 
     @Override
-    public void fillInPokemonList(List<PokemonComplexItem> list) {
+    public void processPokemonList(List<PokemonComplexItem> list) {
+        interactor.fillPokemonDb(AppDatabase.getAppDatabase(context()), list);
+        fillInPokemonList(list);
+
+    }
+
+    @Override
+    public void getPokemonList() {
+        List<PokemonComplexItem> list = null;
+        try {
+            list = interactor.getPokemonsFromDb(AppDatabase.getAppDatabase(context()));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        if (list != null) {
+            if (list.size() == 0) {
+                view.setProgressbarVisible();
+                interactor.retrieveListOfComplexPokemons();
+            } else {
+                fillInPokemonList(list);
+            }
+        }
+    }
+
+    @Override
+    public void refetchPokemonsFromServer() {
+        listOfPokemons = new ArrayList<>();
+        view.setProgressbarVisible();
+        interactor.retrieveListOfComplexPokemons();
+    }
+
+    private void fillInPokemonList(List<PokemonComplexItem> list) {
         if (list == null) {
             return;
         }
         listOfPokemons.addAll(list);
-        pokemonListView.notifyAdapterSetChanged();
+        view.setRecyclerViewVisible();
+        view.notifyAdapterSetChanged();
     }
+
+
 }
