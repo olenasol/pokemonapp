@@ -21,6 +21,7 @@ import com.example.olena.pokemonapp.R;
 import com.example.olena.pokemonapp.presenter.PokemonListPresenter;
 import com.example.olena.pokemonapp.presenter.impl.PokemonListPresenterImpl;
 import com.example.olena.pokemonapp.ui.adapters.PokemonRecyclerAdapter;
+import com.example.olena.pokemonapp.util.Constants;
 import com.example.olena.pokemonapp.view.PokemonListView;
 
 import butterknife.BindView;
@@ -47,6 +48,9 @@ public class PokemonListFragment extends BaseFragment<PokemonListPresenter>  imp
         super.onViewCreated(view, savedInstanceState);
         presenter = new PokemonListPresenterImpl(this);
         initializePokemonListView(view);
+        if(savedInstanceState != null){
+            pokemonListView.scrollToPosition(savedInstanceState.getInt(Constants.LIST_POS));
+        }
     }
 
     @Override
@@ -97,10 +101,19 @@ public class PokemonListFragment extends BaseFragment<PokemonListPresenter>  imp
         switch (item.getItemId()) {
             case R.id.action_refresh:
                 presenter.refetchPokemonsFromServer();
+                pokemonListView.getLayoutManager().scrollToPosition(0);
             default:
                 return super.onOptionsItemSelected(item);
 
         }
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        if(pokemonListView!=null) {
+            outState.putInt(Constants.LIST_POS, ((LinearLayoutManager) pokemonListView.getLayoutManager())
+                    .findFirstCompletelyVisibleItemPosition());
+        }
+        super.onSaveInstanceState(outState);
+    }
 }

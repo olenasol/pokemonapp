@@ -26,9 +26,9 @@ public class PokemonComplexItem {
     @SerializedName(value = "sprites")
     private SpritePokemon spritePokemon;
 
-    @TypeConverters(ActivityTypeConverter.class)
+    @TypeConverters(AbilityTypeConverter.class)
     @SerializedName(value = "abilities")
-    private List<ActivityWrapperItem> listOfActivities;
+    private List<AbilityWrapperItem> listOfAbilities;
 
 
     @Ignore
@@ -41,13 +41,13 @@ public class PokemonComplexItem {
     }
 
     public PokemonComplexItem(int pokemonId, String pokemonName, int pokemonWeight, int pokemonHeight,
-                              SpritePokemon spritePokemon, List<ActivityWrapperItem> listOfActivities) {
+                              SpritePokemon spritePokemon, List<AbilityWrapperItem> listOfAbilities) {
         this.pokemonId = pokemonId;
         this.pokemonName = pokemonName;
         this.pokemonWeight = pokemonWeight;
         this.pokemonHeight = pokemonHeight;
         this.spritePokemon = spritePokemon;
-        this.listOfActivities = listOfActivities;
+        this.listOfAbilities = listOfAbilities;
     }
 
     public void setPokemonName(String pokemonName) {
@@ -65,12 +65,12 @@ public class PokemonComplexItem {
     public void setSpritePokemon(SpritePokemon spritePokemon) {
         this.spritePokemon = spritePokemon;
     }
-    public List<ActivityWrapperItem> getListOfActivities() {
-        return listOfActivities;
+    public List<AbilityWrapperItem> getListOfAbilities() {
+        return listOfAbilities;
     }
 
-    public void setListOfActivities(List<ActivityWrapperItem> listOfActivities) {
-        this.listOfActivities = listOfActivities;
+    public void setListOfAbilities(List<AbilityWrapperItem> listOfAbilities) {
+        this.listOfAbilities = listOfAbilities;
     }
 
     public String getPokemonName() {

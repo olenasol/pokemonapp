@@ -12,4 +12,6 @@ public interface BaseView {
 
     void replaceFragment(BaseFragment fragment, boolean addToBackStack);
 
+    void setCurrentFragment(BaseFragment fragment);
+
 }

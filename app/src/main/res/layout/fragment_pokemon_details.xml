@@ -2,15 +2,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.olena.pokemonapp.ui.fragments.PokemonDetailsFragment">
+    tools:context="com.example.olena.pokemonapp.ui.fragments.PokemonDetailsFragment"
+    >
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_margin="@dimen/margin_details">
-
+        android:layout_marginLeft="@dimen/margin_details"
+        android:layout_marginRight="@dimen/margin_details"
+        >
 
         <ImageView
             android:id="@+id/pokemonImgViewDetails"

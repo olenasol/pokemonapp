@@ -46,4 +46,10 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
             ((BaseActivity) getActivity()).showToast(stringId);
         }
     }
+    @Override
+    public void setCurrentFragment(BaseFragment fragment){
+        if (getActivity() != null) {
+            ((BaseActivity) getActivity()).setCurrentFragment(fragment);
+        }
+    }
 }

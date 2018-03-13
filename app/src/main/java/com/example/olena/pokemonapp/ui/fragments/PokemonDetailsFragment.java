@@ -8,24 +8,15 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.olena.pokemonapp.R;
-import com.example.olena.pokemonapp.model.ActivityWrapperItem;
-import com.example.olena.pokemonapp.model.PokemonComplexItem;
 import com.example.olena.pokemonapp.presenter.PokemonDetailsPresenter;
-import com.example.olena.pokemonapp.presenter.PokemonListPresenter;
 import com.example.olena.pokemonapp.presenter.impl.PokemonDetailsPresenterImpl;
 import com.example.olena.pokemonapp.ui.adapters.ActivityRecyclerAdapter;
-import com.example.olena.pokemonapp.ui.adapters.PokemonRecyclerAdapter;
 import com.example.olena.pokemonapp.view.PokemonDetailsView;
-import com.example.olena.pokemonapp.view.PokemonListView;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,7 +34,6 @@ public class PokemonDetailsFragment extends BaseFragment<PokemonDetailsPresenter
     @BindView(R.id.weightTxt) TextView pokemonWeightTxt;
     @BindView(R.id.heightTxt) TextView pokemonHeightTxt;
     @BindView(R.id.activitiesResView) RecyclerView activitiesResView;
-    private RecyclerView.Adapter recyclerViewAdapter;
     private Unbinder unbinder;
 
 
@@ -97,9 +87,10 @@ public class PokemonDetailsFragment extends BaseFragment<PokemonDetailsPresenter
 
     private void setPokemonActivityList() {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-        recyclerViewAdapter = new ActivityRecyclerAdapter(presenter);
-
+        RecyclerView.Adapter recyclerViewAdapter = new ActivityRecyclerAdapter(presenter);
         activitiesResView.setLayoutManager(layoutManager);
         activitiesResView.setAdapter(recyclerViewAdapter);
     }
+
+
 }

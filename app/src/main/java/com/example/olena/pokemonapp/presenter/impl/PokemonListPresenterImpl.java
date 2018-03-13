@@ -7,6 +7,7 @@ import com.example.olena.pokemonapp.interactor.PokemonListInteractor;
 import com.example.olena.pokemonapp.interactor.impl.PokemonListInteractorImpl;
 import com.example.olena.pokemonapp.model.PokemonComplexItem;
 import com.example.olena.pokemonapp.presenter.PokemonListPresenter;
+import com.example.olena.pokemonapp.ui.fragments.BaseFragment;
 import com.example.olena.pokemonapp.ui.fragments.PokemonDetailsFragment;
 import com.example.olena.pokemonapp.view.PokemonListView;
 import com.example.olena.pokemonapp.view.PokemonRowView;
@@ -34,8 +35,9 @@ public class PokemonListPresenterImpl extends BasePresenterImpl<PokemonListView,
         holder.setPokemonItemOnClick(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                view.replaceFragment(PokemonDetailsFragment.getInstance(pokemonComplexItem.getPokemonId()),
-                true);
+                BaseFragment fragment = PokemonDetailsFragment.getInstance(pokemonComplexItem.getPokemonId());
+                view.setCurrentFragment(fragment);
+                view.replaceFragment(fragment,true);
             }
         });
     }
