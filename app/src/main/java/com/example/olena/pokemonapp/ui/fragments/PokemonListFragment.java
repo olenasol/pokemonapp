@@ -30,12 +30,18 @@ import butterknife.Unbinder;
 
 public class PokemonListFragment extends BaseFragment<PokemonListPresenter>  implements PokemonListView{
 
+    private static final String PAGE_ID = "page_id";
+
     @BindView(R.id.pokemonListRecycler) RecyclerView pokemonListView;
     @BindView(R.id.progressBar) ProgressBar progressBar;
     private Unbinder unbinder;
 
-    public static BaseFragment getInstance() {
-        return new PokemonListFragment();
+    public static BaseFragment getInstance(int pageNum) {
+        BaseFragment fragment = new PokemonListFragment();
+        Bundle args = new Bundle();
+        args.putInt(PAGE_ID,pageNum);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -46,7 +52,7 @@ public class PokemonListFragment extends BaseFragment<PokemonListPresenter>  imp
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        presenter = new PokemonListPresenterImpl(this);
+        presenter = new PokemonListPresenterImpl(this,getArguments().getInt(PAGE_ID,0));
         initializePokemonListView(view);
         if(savedInstanceState != null){
             pokemonListView.scrollToPosition(savedInstanceState.getInt(Constants.LIST_POS));

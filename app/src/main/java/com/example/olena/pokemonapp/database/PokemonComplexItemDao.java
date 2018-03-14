@@ -21,8 +21,11 @@ public interface PokemonComplexItemDao {
     @Query("SELECT * FROM PokemonComplexItem WHERE pokemonId = :id")
     PokemonComplexItem loadPokemonById(int id);
 
-    @Query("DELETE FROM PokemonComplexItem")
-    void deleteAllPokemonComplex();
+    @Query("DELETE FROM PokemonComplexItem WHERE pageNumber = :pageNumber")
+    void deletePokemonComplexPage(int pageNumber);
+
+    @Query("SELECT * FROM PokemonComplexItem WHERE pageNumber = :pageNum")
+    List<PokemonComplexItem> loadPokemonsByPage(int pageNum);
 
 
 }

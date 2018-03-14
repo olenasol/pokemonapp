@@ -45,9 +45,7 @@ public class PokemonDetailsPresenterImpl extends BasePresenterImpl<PokemonDetail
             view.setPokemonWeight(pokemon.getPokemonWeight());
             view.setPokemonHeight(pokemon.getPokemonHeight());
             //view.notifyAdapterSetChanged();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
     }

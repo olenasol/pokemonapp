@@ -6,6 +6,7 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -30,6 +31,8 @@ public class PokemonComplexItem {
     @SerializedName(value = "abilities")
     private List<AbilityWrapperItem> listOfAbilities;
 
+    @Expose(serialize = false, deserialize = false)
+    private int pageNumber;
 
     @Ignore
     public PokemonComplexItem(String pokemonName, int pokemonWeight, int pokemonHeight,
@@ -95,5 +98,13 @@ public class PokemonComplexItem {
 
     public void setPokemonId(int pokemonId) {
         this.pokemonId = pokemonId;
+    }
+
+    public int getPageNumber() {
+        return pageNumber;
+    }
+
+    public void setPageNumber(int pageNumber) {
+        this.pageNumber = pageNumber;
     }
 }
