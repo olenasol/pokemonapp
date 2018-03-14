@@ -25,7 +25,7 @@ public class FillDatabaseAsyncTask extends AsyncTask<PokemonComplexItem,Void,Voi
         Log.i(Constants.APP_IDENTIFICATOR_LOG,"Database filled");
     }
     private void fillInDatabase(PokemonComplexItem... list){
-        appDatabase.pokemonComplexItemDao().deleteAllPokemonComplex();
+        appDatabase.pokemonComplexItemDao().deletePokemonComplexPage(list[0].getPageNumber());
         appDatabase.pokemonComplexItemDao().insertComplexPokemons(list);
     }
 }

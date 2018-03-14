@@ -9,7 +9,7 @@ import com.example.olena.pokemonapp.util.Constants;
 
 import java.util.List;
 
-public class GetPokemonsAsyncTask extends AsyncTask<Void,Void,List<PokemonComplexItem>> {
+public class GetPokemonsAsyncTask extends AsyncTask<Integer,Void,List<PokemonComplexItem>> {
 
     private AppDatabase appDatabase;
 
@@ -17,9 +17,10 @@ public class GetPokemonsAsyncTask extends AsyncTask<Void,Void,List<PokemonComple
         this.appDatabase = appDatabase;
     }
 
+
     @Override
-    protected List<PokemonComplexItem> doInBackground(Void... voids) {
-        return appDatabase.pokemonComplexItemDao().loadAllPokemonComplex();
+    protected List<PokemonComplexItem> doInBackground(Integer... integers) {
+        return appDatabase.pokemonComplexItemDao().loadPokemonsByPage(integers[0]);
     }
 
     @Override

@@ -16,13 +16,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+//TODO: 14.03.2018 fix crush whan data keeps loading even through fragment is destroyed
 public class PokemonListPresenterImpl extends BasePresenterImpl<PokemonListView, PokemonListInteractor>
         implements PokemonListPresenter {
 
     private List<PokemonComplexItem> listOfPokemons;
+    private int pageNumber;
 
-    public PokemonListPresenterImpl(PokemonListView pokemonListView) {
+    public PokemonListPresenterImpl(PokemonListView pokemonListView,int pageNumber) {
         this.view = pokemonListView;
+        this.pageNumber = pageNumber;
         this.interactor = new PokemonListInteractorImpl(this);
         listOfPokemons = new ArrayList<>();
     }
@@ -49,7 +52,7 @@ public class PokemonListPresenterImpl extends BasePresenterImpl<PokemonListView,
 
     @Override
     public void processPokemonList(List<PokemonComplexItem> list) {
-        interactor.fillPokemonDb(AppDatabase.getAppDatabase(context()), list);
+        interactor.fillPokemonDb( list);
         fillInPokemonList(list);
 
     }
@@ -58,16 +61,14 @@ public class PokemonListPresenterImpl extends BasePresenterImpl<PokemonListView,
     public void getPokemonList() {
         List<PokemonComplexItem> list = null;
         try {
-            list = interactor.getPokemonsFromDb(AppDatabase.getAppDatabase(context()));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+            list = interactor.getPokemonsFromDb(pageNumber);
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         if (list != null) {
             if (list.size() == 0) {
                 view.setProgressbarVisible();
-                interactor.retrieveListOfComplexPokemons();
+                interactor.retrieveListOfComplexPokemons(pageNumber);
             } else {
                 fillInPokemonList(list);
             }
@@ -78,7 +79,7 @@ public class PokemonListPresenterImpl extends BasePresenterImpl<PokemonListView,
     public void refetchPokemonsFromServer() {
         listOfPokemons = new ArrayList<>();
         view.setProgressbarVisible();
-        interactor.retrieveListOfComplexPokemons();
+        interactor.retrieveListOfComplexPokemons(pageNumber);
     }
 
     private void fillInPokemonList(List<PokemonComplexItem> list) {

@@ -35,7 +35,7 @@ public class PokemonListInteractorImpl extends BaseInteractorImpl<PokemonListPre
 
     private Subscription subscription;
     private List<PokemonComplexItem> listComplexPokemons;
-    private int numberOfPokemons = 20;
+    private int numberOfPokemons = Constants.ITEMS_PER_PAGE;
     private int numberOfLoadedPokemons;
 
 
@@ -45,8 +45,8 @@ public class PokemonListInteractorImpl extends BaseInteractorImpl<PokemonListPre
 
     private PokemonService createCallAPI(){
         OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(100, TimeUnit.SECONDS)
-                .readTimeout(100,TimeUnit.SECONDS).build();
+                .connectTimeout(Constants.CONNECTION_TIMEOUT, TimeUnit.SECONDS)
+                .readTimeout(Constants.CONNECTION_TIMEOUT,TimeUnit.SECONDS).build();
         return new Retrofit.Builder()
                 .baseUrl(Constants.BASE_URL)
                 .client(client)
@@ -56,9 +56,9 @@ public class PokemonListInteractorImpl extends BaseInteractorImpl<PokemonListPre
     }
 
     @Override
-    public void retrieveListOfComplexPokemons() {
+    public void retrieveListOfComplexPokemons(final int pageNumber) {
         subscription = createCallAPI()
-                .getPokemonsListPage(20,20)
+                .getPokemonsListPage(Constants.ITEMS_PER_PAGE,pageNumber*Constants.ITEMS_PER_PAGE)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ListPageItem>() {
@@ -76,29 +76,29 @@ public class PokemonListInteractorImpl extends BaseInteractorImpl<PokemonListPre
 
                     @Override
                     public void onNext(ListPageItem listPageItem) {
-                       getListOfPokemonsFromPageItem(listPageItem);
+                       getListOfPokemonsFromPageItem(listPageItem,pageNumber);
                     }
                 });
     }
 
     @Override
-    public void fillPokemonDb(AppDatabase appDatabase, List<PokemonComplexItem> list) {
+    public void fillPokemonDb(List<PokemonComplexItem> list) {
         PokemonComplexItem[] arrPokemons = new PokemonComplexItem[list.size()];
         for(int i=0;i<arrPokemons.length;i++){
             arrPokemons[i]=list.get(i);
         }
-        new FillDatabaseAsyncTask(appDatabase).execute(arrPokemons);
+        new FillDatabaseAsyncTask(AppDatabase.getAppDatabase(context())).execute(arrPokemons);
     }
 
     @Override
-    public List<PokemonComplexItem> getPokemonsFromDb(AppDatabase appDatabase)
+    public List<PokemonComplexItem> getPokemonsFromDb(int pageNumber)
             throws ExecutionException, InterruptedException {
-        return new GetPokemonsAsyncTask(appDatabase).execute().get();
+        return new GetPokemonsAsyncTask(AppDatabase.getAppDatabase(context())).execute(pageNumber).get();
     }
 
-    private void getListOfPokemonsFromPageItem(ListPageItem listPageItem) {
+    private void getListOfPokemonsFromPageItem(ListPageItem listPageItem,final int pageNumber) {
         listComplexPokemons = new ArrayList<>();
-        for (PokemonSimpleItem item:listPageItem.getListPokemonLinks()){
+        for (final PokemonSimpleItem item:listPageItem.getListPokemonLinks()){
             subscription = createCallAPI()
                     .getPokemonById(Util.getIdFromLink(item.getPokemonDetailsUri()))
                     .subscribeOn(Schedulers.io())
@@ -115,7 +115,7 @@ public class PokemonListInteractorImpl extends BaseInteractorImpl<PokemonListPre
                         public void onError(Throwable e) {
                             numberOfPokemons--;
                             numberOfLoadedPokemons++;
-                            if(numberOfLoadedPokemons==20) {
+                            if(numberOfLoadedPokemons==Constants.ITEMS_PER_PAGE) {
                                 presenter.processPokemonList(listComplexPokemons);
                             }
                             Log.i(Constants.APP_IDENTIFICATOR_LOG,"Error loading page.");
@@ -123,7 +123,8 @@ public class PokemonListInteractorImpl extends BaseInteractorImpl<PokemonListPre
 
                         @Override
                         public void onNext(PokemonComplexItem pokemonComplexItem) {
-                            pokemonComplexItem.setPokemonId(numberOfLoadedPokemons);
+                            pokemonComplexItem.setPokemonId(Util.getIdFromLink(item.getPokemonDetailsUri()));
+                            pokemonComplexItem.setPageNumber(pageNumber);
                             try {
                                 pokemonComplexItem.getSpritePokemon()
                                         .setImage(ImageUtil

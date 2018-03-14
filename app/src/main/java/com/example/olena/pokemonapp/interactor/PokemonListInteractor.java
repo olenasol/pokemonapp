@@ -8,10 +8,10 @@ import java.util.concurrent.ExecutionException;
 
 public interface PokemonListInteractor extends BaseInteractor{
 
-    void retrieveListOfComplexPokemons();
+    void retrieveListOfComplexPokemons(int pageNumber);
 
-    void fillPokemonDb(AppDatabase appDatabase, List<PokemonComplexItem> list);
+    void fillPokemonDb( List<PokemonComplexItem> list);
 
-    List<PokemonComplexItem> getPokemonsFromDb(AppDatabase appDatabase) throws ExecutionException,
+    List<PokemonComplexItem> getPokemonsFromDb(int pageNumber) throws ExecutionException,
             InterruptedException;
 }

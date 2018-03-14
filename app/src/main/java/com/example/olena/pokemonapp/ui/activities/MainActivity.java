@@ -8,11 +8,11 @@ import android.view.Menu;
 
 import com.example.olena.pokemonapp.R;
 import com.example.olena.pokemonapp.ui.fragments.BaseFragment;
+import com.example.olena.pokemonapp.ui.fragments.PagerFragment;
 import com.example.olena.pokemonapp.ui.fragments.PokemonDetailsFragment;
 import com.example.olena.pokemonapp.ui.fragments.PokemonListFragment;
 import com.example.olena.pokemonapp.util.Constants;
 
-//TODO: 12.03.2017 orientation changed when in Details fragment
 public class MainActivity extends BaseActivity implements FragmentManager.OnBackStackChangedListener{
 
     @Override
@@ -25,7 +25,7 @@ public class MainActivity extends BaseActivity implements FragmentManager.OnBack
             setCurrentFragment(currentFragment);
         }
         else {
-            currentFragment = PokemonListFragment.getInstance();
+            currentFragment = PagerFragment.getInstance();
             setCurrentFragment(currentFragment);
         }
         replaceFragment(currentFragment,false);
