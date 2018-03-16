@@ -17,7 +17,9 @@ public class FillDatabaseAsyncTask extends AsyncTask<PokemonComplexItem,Void,Voi
 
     @Override
     protected Void doInBackground(PokemonComplexItem... pokemonComplexItems) {
-        fillInDatabase(pokemonComplexItems);
+        if(pokemonComplexItems.length!=0) {
+            fillInDatabase(pokemonComplexItems);
+        }
         return null;
     }
     @Override

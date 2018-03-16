@@ -4,15 +4,12 @@ package com.example.olena.pokemonapp.ui.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.ProgressBar;
@@ -28,18 +25,20 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class PokemonListFragment extends BaseFragment<PokemonListPresenter>  implements PokemonListView{
+public class PokemonListFragment extends BaseFragment<PokemonListPresenter> implements PokemonListView {
 
     private static final String PAGE_ID = "page_id";
 
-    @BindView(R.id.pokemonListRecycler) RecyclerView pokemonListView;
-    @BindView(R.id.progressBar) ProgressBar progressBar;
+    @BindView(R.id.pokemonListRecycler)
+    RecyclerView pokemonListView;
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
     private Unbinder unbinder;
 
     public static BaseFragment getInstance(int pageNum) {
         BaseFragment fragment = new PokemonListFragment();
         Bundle args = new Bundle();
-        args.putInt(PAGE_ID,pageNum);
+        args.putInt(PAGE_ID, pageNum);
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,9 +51,11 @@ public class PokemonListFragment extends BaseFragment<PokemonListPresenter>  imp
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        presenter = new PokemonListPresenterImpl(this,getArguments().getInt(PAGE_ID,0));
+        if(getArguments()!=null) {
+            presenter = new PokemonListPresenterImpl(this, getArguments().getInt(PAGE_ID, 0));
+        }
         initializePokemonListView(view);
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             pokemonListView.scrollToPosition(savedInstanceState.getInt(Constants.LIST_POS));
         }
     }
@@ -66,7 +67,7 @@ public class PokemonListFragment extends BaseFragment<PokemonListPresenter>  imp
     }
 
     private void initializePokemonListView(View view) {
-        unbinder = ButterKnife.bind(this,view);
+        unbinder = ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         RecyclerView.Adapter recyclerViewAdapter = new PokemonRecyclerAdapter(presenter);
@@ -100,8 +101,9 @@ public class PokemonListFragment extends BaseFragment<PokemonListPresenter>  imp
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu, menu);
-        super.onCreateOptionsMenu(menu,inflater);
+        super.onCreateOptionsMenu(menu, inflater);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -116,7 +118,7 @@ public class PokemonListFragment extends BaseFragment<PokemonListPresenter>  imp
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        if(pokemonListView!=null) {
+        if (pokemonListView != null) {
             outState.putInt(Constants.LIST_POS, ((LinearLayoutManager) pokemonListView.getLayoutManager())
                     .findFirstCompletelyVisibleItemPosition());
         }

@@ -32,7 +32,6 @@ public class PokemonDetailsPresenterImpl extends BasePresenterImpl<PokemonDetail
 
     @Override
     public int getActivityRowsCount() {
-        int n = pokemon.getListOfAbilities().size();
         return pokemon.getListOfAbilities().size();
     }
 

@@ -3,9 +3,7 @@ package com.example.olena.pokemonapp.ui.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.view.ViewGroup;
 
 import com.example.olena.pokemonapp.ui.fragments.PokemonListFragment;
 
@@ -15,6 +13,10 @@ public class PokemonPagerAdapter extends FragmentStatePagerAdapter {
 
     public PokemonPagerAdapter(FragmentManager fm, int pageCount) {
         super(fm);
+        this.pageCount = pageCount;
+    }
+
+    public void setPageCount(int pageCount) {
         this.pageCount = pageCount;
     }
 
@@ -30,7 +32,7 @@ public class PokemonPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-           return "Page " + ++position;
+        return "Page " + ++position;
     }
 
 

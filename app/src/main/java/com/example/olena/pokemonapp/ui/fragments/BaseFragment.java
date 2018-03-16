@@ -31,13 +31,18 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
 
     @Override
     public void replaceFragment(BaseFragment fragment, boolean addToBackStack) {
-        if(( getActivity()) != null)
-        ((BaseActivity) getActivity()).replaceFragment(fragment, addToBackStack);
+        if ((getActivity()) != null)
+            ((BaseActivity) getActivity()).replaceFragment(fragment, addToBackStack);
     }
 
     @Override
     public Context context() {
-        return ((BaseActivity) getActivity()).context();
+        if (getActivity() != null) {
+            return ((BaseActivity) getActivity()).context();
+        }
+        else{
+            return null;
+        }
     }
 
     @Override
@@ -46,8 +51,9 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
             ((BaseActivity) getActivity()).showToast(stringId);
         }
     }
+
     @Override
-    public void setCurrentFragment(BaseFragment fragment){
+    public void setCurrentFragment(BaseFragment fragment) {
         if (getActivity() != null) {
             ((BaseActivity) getActivity()).setCurrentFragment(fragment);
         }

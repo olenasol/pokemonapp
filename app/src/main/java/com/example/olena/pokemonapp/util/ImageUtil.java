@@ -14,14 +14,12 @@ import java.util.concurrent.ExecutionException;
 
 public class ImageUtil {
 
-    public static byte[] getImgToByteFromURL(String urlS) throws IOException {
+    public static byte[] getImgToByteFromURL(String urlS) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         Bitmap image = null;
         try {
             image = new GetImageAsyncTask().execute(urlS).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         if (image != null) {
@@ -40,7 +38,12 @@ public class ImageUtil {
                 e.printStackTrace();
             }
             try {
-                return BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                if (url != null){
+                    return BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                }
+                else {
+                    return null;
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

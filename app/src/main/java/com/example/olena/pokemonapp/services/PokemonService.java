@@ -1,4 +1,4 @@
-package com.example.olena.pokemonapp.database;
+package com.example.olena.pokemonapp.services;
 
 import com.example.olena.pokemonapp.model.ListPageItem;
 import com.example.olena.pokemonapp.model.PokemonComplexItem;

@@ -2,33 +2,34 @@ package com.example.olena.pokemonapp.ui.fragments;
 
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.example.olena.pokemonapp.R;
 import com.example.olena.pokemonapp.presenter.PokemonListPresenter;
 import com.example.olena.pokemonapp.ui.adapters.PokemonPagerAdapter;
+import com.example.olena.pokemonapp.util.Constants;
+import com.example.olena.pokemonapp.view.PagerView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static android.support.v4.view.ViewPager.*;
+
 /**
  * A simple {@link Fragment} subclass.
  */
-//TODO: 14.03.2018 change number of pages(from server)
-public class PagerFragment extends BaseFragment<PokemonListPresenter> {
+public class PagerFragment extends BaseFragment<PokemonListPresenter> implements PagerView {
 
     @BindView(R.id.pager) ViewPager pager;
+    private PokemonPagerAdapter pagerAdapter;
     private Unbinder unbinder;
+    private boolean isCorrectNumberOfPagesSet;
 
     public static BaseFragment getInstance() {
         return new PagerFragment();
@@ -42,9 +43,54 @@ public class PagerFragment extends BaseFragment<PokemonListPresenter> {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        unbinder = ButterKnife.bind(this,view);
-        PagerAdapter pagerAdapter = new PokemonPagerAdapter(getChildFragmentManager(),30);
+        unbinder = ButterKnife.bind(this, view);
+        initPager();
+    }
+
+    private void initPager() {
+        if(PreferenceManager.getDefaultSharedPreferences(getContext())
+                .getInt(Constants.SAVED_PAGE_COUNT, 0)>0){
+            pagerAdapter = new PokemonPagerAdapter(getChildFragmentManager(),
+                   getCorrectPageNumber());
+            isCorrectNumberOfPagesSet = true;
+        }
+        else {
+            pagerAdapter = new PokemonPagerAdapter(getChildFragmentManager(), Constants.DEFAULT_PAGE_NUMBER);
+            setPageChangeListener();
+        }
         pager.setAdapter(pagerAdapter);
+    }
+
+    private void setPageChangeListener() {
+        pager.addOnPageChangeListener(new OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if(!isCorrectNumberOfPagesSet) {
+                    if (PreferenceManager.getDefaultSharedPreferences(getContext())
+                            .getInt(Constants.SAVED_PAGE_COUNT, 0) > 0) {
+                        pagerAdapter.setPageCount(getCorrectPageNumber());
+                    }
+                    pagerAdapter.notifyDataSetChanged();
+                    isCorrectNumberOfPagesSet = true;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
+
+    private int getCorrectPageNumber(){
+        int numberOfItems = PreferenceManager.getDefaultSharedPreferences(getContext())
+                .getInt(Constants.SAVED_PAGE_COUNT, 0);
+        return (int)(Math.ceil(numberOfItems/(double)Constants.ITEMS_PER_PAGE));
     }
 
     @Override

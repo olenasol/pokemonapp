@@ -1,5 +1,7 @@
 package com.example.olena.pokemonapp.interactor.impl;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.example.olena.pokemonapp.R;
@@ -9,33 +11,24 @@ import com.example.olena.pokemonapp.database.asynctasks.GetPokemonsAsyncTask;
 import com.example.olena.pokemonapp.interactor.PokemonListInteractor;
 import com.example.olena.pokemonapp.model.ListPageItem;
 import com.example.olena.pokemonapp.model.PokemonComplexItem;
-import com.example.olena.pokemonapp.database.PokemonService;
 import com.example.olena.pokemonapp.model.PokemonSimpleItem;
 import com.example.olena.pokemonapp.presenter.PokemonListPresenter;
 import com.example.olena.pokemonapp.util.Constants;
 import com.example.olena.pokemonapp.util.ImageUtil;
 import com.example.olena.pokemonapp.util.Util;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
-import okhttp3.OkHttpClient;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observer;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class PokemonListInteractorImpl extends BaseInteractorImpl<PokemonListPresenter> implements PokemonListInteractor{
+public class PokemonListInteractorImpl extends BaseInteractorImpl<PokemonListPresenter> implements PokemonListInteractor {
 
-    private Subscription subscription;
     private List<PokemonComplexItem> listComplexPokemons;
-    private int numberOfPokemons = Constants.ITEMS_PER_PAGE;
+    private int numberOfPokemons ;
     private int numberOfLoadedPokemons;
 
 
@@ -43,40 +36,31 @@ public class PokemonListInteractorImpl extends BaseInteractorImpl<PokemonListPre
         this.presenter = pokemonListPresenter;
     }
 
-    private PokemonService createCallAPI(){
-        OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(Constants.CONNECTION_TIMEOUT, TimeUnit.SECONDS)
-                .readTimeout(Constants.CONNECTION_TIMEOUT,TimeUnit.SECONDS).build();
-        return new Retrofit.Builder()
-                .baseUrl(Constants.BASE_URL)
-                .client(client)
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build().create(PokemonService.class);
-    }
 
     @Override
     public void retrieveListOfComplexPokemons(final int pageNumber) {
-        subscription = createCallAPI()
-                .getPokemonsListPage(Constants.ITEMS_PER_PAGE,pageNumber*Constants.ITEMS_PER_PAGE)
+        Util.createCallAPI()
+                .getPokemonsListPage(Constants.ITEMS_PER_PAGE, pageNumber * Constants.ITEMS_PER_PAGE)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ListPageItem>() {
 
                     @Override
                     public void onCompleted() {
-                        Log.i(Constants.APP_IDENTIFICATOR_LOG,"Page loaded.");
+                        Log.i(Constants.APP_IDENTIFICATOR_LOG, "Page loaded.");
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.i(Constants.APP_IDENTIFICATOR_LOG,"Error loading page.");
+                        Log.i(Constants.APP_IDENTIFICATOR_LOG, "Error loading page.");
                         showToast(R.string.err_loading);
                     }
 
                     @Override
                     public void onNext(ListPageItem listPageItem) {
-                       getListOfPokemonsFromPageItem(listPageItem,pageNumber);
+                        savePageCount(listPageItem.getPageCount());
+                        numberOfPokemons = listPageItem.getListPokemonLinks().size();
+                        getListOfPokemonsFromPageItem(listPageItem, pageNumber);
                     }
                 });
     }
@@ -84,10 +68,12 @@ public class PokemonListInteractorImpl extends BaseInteractorImpl<PokemonListPre
     @Override
     public void fillPokemonDb(List<PokemonComplexItem> list) {
         PokemonComplexItem[] arrPokemons = new PokemonComplexItem[list.size()];
-        for(int i=0;i<arrPokemons.length;i++){
-            arrPokemons[i]=list.get(i);
+        for (int i = 0; i < arrPokemons.length; i++) {
+            arrPokemons[i] = list.get(i);
         }
-        new FillDatabaseAsyncTask(AppDatabase.getAppDatabase(context())).execute(arrPokemons);
+        if (context() != null) {
+            new FillDatabaseAsyncTask(AppDatabase.getAppDatabase(context())).execute(arrPokemons);
+        }
     }
 
     @Override
@@ -96,10 +82,13 @@ public class PokemonListInteractorImpl extends BaseInteractorImpl<PokemonListPre
         return new GetPokemonsAsyncTask(AppDatabase.getAppDatabase(context())).execute(pageNumber).get();
     }
 
-    private void getListOfPokemonsFromPageItem(ListPageItem listPageItem,final int pageNumber) {
+    private void getListOfPokemonsFromPageItem(ListPageItem listPageItem, final int pageNumber) {
         listComplexPokemons = new ArrayList<>();
-        for (final PokemonSimpleItem item:listPageItem.getListPokemonLinks()){
-            subscription = createCallAPI()
+        for (final PokemonSimpleItem item : listPageItem.getListPokemonLinks()) {
+            if (context() == null) {
+                break;
+            }
+            Util.createCallAPI()
                     .getPokemonById(Util.getIdFromLink(item.getPokemonDetailsUri()))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -108,38 +97,41 @@ public class PokemonListInteractorImpl extends BaseInteractorImpl<PokemonListPre
                         @Override
                         public void onCompleted() {
                             numberOfLoadedPokemons++;
-                            Log.i(Constants.APP_IDENTIFICATOR_LOG,"Page loaded.");
+                            Log.i(Constants.APP_IDENTIFICATOR_LOG, "Page loaded.");
                         }
 
                         @Override
                         public void onError(Throwable e) {
                             numberOfPokemons--;
                             numberOfLoadedPokemons++;
-                            if(numberOfLoadedPokemons==Constants.ITEMS_PER_PAGE) {
+                            if (numberOfLoadedPokemons == Constants.ITEMS_PER_PAGE) {
                                 presenter.processPokemonList(listComplexPokemons);
                             }
-                            Log.i(Constants.APP_IDENTIFICATOR_LOG,"Error loading page.");
+                            Log.i(Constants.APP_IDENTIFICATOR_LOG, "Error loading page.");
                         }
 
                         @Override
                         public void onNext(PokemonComplexItem pokemonComplexItem) {
                             pokemonComplexItem.setPokemonId(Util.getIdFromLink(item.getPokemonDetailsUri()));
                             pokemonComplexItem.setPageNumber(pageNumber);
-                            try {
-                                pokemonComplexItem.getSpritePokemon()
-                                        .setImage(ImageUtil
-                                                .getImgToByteFromURL(pokemonComplexItem
-                                                        .getSpritePokemon().getFrontDefault()));
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                            pokemonComplexItem.getSpritePokemon()
+                                    .setImage(ImageUtil
+                                            .getImgToByteFromURL(pokemonComplexItem
+                                                    .getSpritePokemon().getFrontDefault()));
                             listComplexPokemons.add(pokemonComplexItem);
-                            if(listComplexPokemons.size()==numberOfPokemons) {
+                            if (listComplexPokemons.size() == numberOfPokemons) {
                                 presenter.processPokemonList(listComplexPokemons);
                             }
                         }
                     });
         }
+    }
+
+    private void savePageCount(int pageCount) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context());
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(Constants.SAVED_PAGE_COUNT, pageCount);
+        editor.apply();
     }
 
 }

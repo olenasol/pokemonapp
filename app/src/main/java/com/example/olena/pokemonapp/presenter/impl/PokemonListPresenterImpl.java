@@ -2,7 +2,6 @@ package com.example.olena.pokemonapp.presenter.impl;
 
 import android.view.View;
 
-import com.example.olena.pokemonapp.database.AppDatabase;
 import com.example.olena.pokemonapp.interactor.PokemonListInteractor;
 import com.example.olena.pokemonapp.interactor.impl.PokemonListInteractorImpl;
 import com.example.olena.pokemonapp.model.PokemonComplexItem;
@@ -16,14 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-//TODO: 14.03.2018 fix crush whan data keeps loading even through fragment is destroyed
 public class PokemonListPresenterImpl extends BasePresenterImpl<PokemonListView, PokemonListInteractor>
         implements PokemonListPresenter {
 
     private List<PokemonComplexItem> listOfPokemons;
     private int pageNumber;
 
-    public PokemonListPresenterImpl(PokemonListView pokemonListView,int pageNumber) {
+    public PokemonListPresenterImpl(PokemonListView pokemonListView, int pageNumber) {
         this.view = pokemonListView;
         this.pageNumber = pageNumber;
         this.interactor = new PokemonListInteractorImpl(this);
@@ -40,7 +38,7 @@ public class PokemonListPresenterImpl extends BasePresenterImpl<PokemonListView,
             public void onClick(View v) {
                 BaseFragment fragment = PokemonDetailsFragment.getInstance(pokemonComplexItem.getPokemonId());
                 view.setCurrentFragment(fragment);
-                view.replaceFragment(fragment,true);
+                view.replaceFragment(fragment, true);
             }
         });
     }
@@ -52,7 +50,7 @@ public class PokemonListPresenterImpl extends BasePresenterImpl<PokemonListView,
 
     @Override
     public void processPokemonList(List<PokemonComplexItem> list) {
-        interactor.fillPokemonDb( list);
+        interactor.fillPokemonDb(list);
         fillInPokemonList(list);
 
     }
@@ -87,8 +85,10 @@ public class PokemonListPresenterImpl extends BasePresenterImpl<PokemonListView,
             return;
         }
         listOfPokemons.addAll(list);
-        view.setRecyclerViewVisible();
-        view.notifyAdapterSetChanged();
+        if (context() != null) {
+            view.setRecyclerViewVisible();
+            view.notifyAdapterSetChanged();
+        }
     }
 
 

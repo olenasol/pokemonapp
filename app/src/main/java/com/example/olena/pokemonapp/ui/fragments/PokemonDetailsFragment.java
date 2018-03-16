@@ -27,7 +27,7 @@ import butterknife.Unbinder;
  */
 public class PokemonDetailsFragment extends BaseFragment<PokemonDetailsPresenter>  implements PokemonDetailsView {
 
-    public static final String CHOOSEN_POKEMON_ID = "pokemon id";
+    private static final String CHOOSEN_POKEMON_ID = "pokemon id";
 
     @BindView(R.id.pokemonImgViewDetails) ImageView pokemonImgView;
     @BindView(R.id.pokemonNameTxtDetails) TextView pokemonNameTxt;
@@ -56,7 +56,9 @@ public class PokemonDetailsFragment extends BaseFragment<PokemonDetailsPresenter
         unbinder = ButterKnife.bind(this,view);
         presenter = new PokemonDetailsPresenterImpl(this);
         setPokemonActivityList();
-        presenter.loadPokemonData(getArguments().getInt(CHOOSEN_POKEMON_ID));
+        if(getArguments()!=null) {
+            presenter.loadPokemonData(getArguments().getInt(CHOOSEN_POKEMON_ID));
+        }
     }
 
     @Override

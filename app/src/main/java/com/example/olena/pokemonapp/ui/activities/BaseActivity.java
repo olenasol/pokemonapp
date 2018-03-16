@@ -2,7 +2,6 @@ package com.example.olena.pokemonapp.ui.activities;
 
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
@@ -25,7 +24,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
     }
 
     @Override
-    public void setCurrentFragment(BaseFragment fragment){
+    public void setCurrentFragment(BaseFragment fragment) {
         this.currentFragment = fragment;
     }
 
