@@ -2,6 +2,8 @@
 <set xmlns:android="http://schemas.android.com/apk/res/android"
     android:duration="1000">
 
+    <!--TODO: need to init interpolator on top!-->
+
     <translate
         android:fromYDelta="-80%"
         android:interpolator="@android:anim/decelerate_interpolator"

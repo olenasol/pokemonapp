@@ -88,6 +88,7 @@ public class PokemonListInteractorImpl extends BaseInteractorImpl<PokemonListPre
             if (context() == null) {
                 break;
             }
+            //TODO: ну бляяяяяяяяяяяяяяяяяяяяяяяяя!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             Util.createCallAPI()
                     .getPokemonById(Util.getIdFromLink(item.getPokemonDetailsUri()))
                     .subscribeOn(Schedulers.io())

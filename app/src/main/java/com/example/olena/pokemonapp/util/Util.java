@@ -17,7 +17,7 @@ public class Util {
             str = str.substring(0, str.length() - 1);
         }
         int slashPosition = 0;
-        if(str!=null) {
+        if(str != null) {
             for (int i = str.length() - 1; i >= 0; i--) {
                 if (str.charAt(i) == '/') {
                     slashPosition = i;

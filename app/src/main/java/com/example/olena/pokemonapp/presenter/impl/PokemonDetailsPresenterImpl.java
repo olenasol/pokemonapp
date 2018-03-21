@@ -39,6 +39,7 @@ public class PokemonDetailsPresenterImpl extends BasePresenterImpl<PokemonDetail
     public void loadPokemonData(int id) {
         try {
             pokemon = interactor.getPokemonFromDbById(id);
+            //TODO: make little class PokemonDetailsPojo and make one method instead!
             view.setPokemonImg(ImageUtil.byteArrToBitmap(pokemon.getSpritePokemon().getImage()));
             view.setPokemonName(pokemon.getPokemonName());
             view.setPokemonWeight(pokemon.getPokemonWeight());

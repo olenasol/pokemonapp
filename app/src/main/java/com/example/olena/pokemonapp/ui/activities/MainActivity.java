@@ -69,6 +69,7 @@ public class MainActivity extends BaseActivity implements FragmentManager.OnBack
         retrieveFragmentInHolder();
     }
 
+    //TODO: wtf?
     private void retrieveFragmentInHolder(){
         BaseFragment fragment = (BaseFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_holder);

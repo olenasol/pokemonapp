@@ -50,6 +50,7 @@ public class ImageUtil {
             return null;
         }
     }
+
     public static Bitmap byteArrToBitmap(byte[] data){
         return BitmapFactory.decodeByteArray(data, 0, data.length);
     }

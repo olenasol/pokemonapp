@@ -19,6 +19,7 @@ import butterknife.ButterKnife;
 
 public class PokemonViewHolder extends RecyclerView.ViewHolder implements PokemonRowView {
 
+    //TODO: Don't do this...
     @BindView(R.id.pokemonImgView)
     ImageView pokemonImgView;
     @BindView(R.id.pokemonNameTxt)

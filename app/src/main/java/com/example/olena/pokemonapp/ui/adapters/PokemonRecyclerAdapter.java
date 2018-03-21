@@ -13,6 +13,8 @@ public class PokemonRecyclerAdapter extends RecyclerView.Adapter<PokemonViewHold
 
     private PokemonListPresenter pokemonListPresenter;
 
+    //TODO: package managment - put holder inside adapters package
+
     public PokemonRecyclerAdapter(PokemonListPresenter pokemonListPresenter) {
         this.pokemonListPresenter = pokemonListPresenter;
     }

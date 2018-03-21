@@ -30,6 +30,7 @@ public class PokemonListFragment extends BaseFragment<PokemonListPresenter> impl
     private static final String PAGE_ID = "page_id";
 
     @BindView(R.id.pokemonListRecycler)
+            //TODO: don't call variable listview if its recyclerview
     RecyclerView pokemonListView;
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
@@ -51,7 +52,7 @@ public class PokemonListFragment extends BaseFragment<PokemonListPresenter> impl
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if(getArguments()!=null) {
+        if (getArguments() != null) {
             presenter = new PokemonListPresenterImpl(this, getArguments().getInt(PAGE_ID, 0));
         }
         initializePokemonListView(view);
@@ -86,6 +87,7 @@ public class PokemonListFragment extends BaseFragment<PokemonListPresenter> impl
         pokemonListView.scheduleLayoutAnimation();
     }
 
+    //TODO: you could make one method with boolean parameter, easier to read!
     @Override
     public void setProgressbarVisible() {
         progressBar.setVisibility(View.VISIBLE);

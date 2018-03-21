@@ -53,8 +53,7 @@ public class PagerFragment extends BaseFragment<PokemonListPresenter> implements
             pagerAdapter = new PokemonPagerAdapter(getChildFragmentManager(),
                    getCorrectPageNumber());
             isCorrectNumberOfPagesSet = true;
-        }
-        else {
+        } else {
             pagerAdapter = new PokemonPagerAdapter(getChildFragmentManager(), Constants.DEFAULT_PAGE_NUMBER);
             setPageChangeListener();
         }

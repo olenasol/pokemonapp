@@ -18,6 +18,8 @@ import java.util.concurrent.ExecutionException;
 public class PokemonListPresenterImpl extends BasePresenterImpl<PokemonListView, PokemonListInteractor>
         implements PokemonListPresenter {
 
+    //TODO: you have two copies of same data in Presenter and Interactor, leave only one in interactor
+    //TODO: wtf? do you even use it here?
     private List<PokemonComplexItem> listOfPokemons;
     private int pageNumber;
 
@@ -75,6 +77,7 @@ public class PokemonListPresenterImpl extends BasePresenterImpl<PokemonListView,
 
     @Override
     public void refetchPokemonsFromServer() {
+        //TODO: array.clear();
         listOfPokemons = new ArrayList<>();
         view.setProgressbarVisible();
         interactor.retrieveListOfComplexPokemons(pageNumber);
@@ -85,6 +88,7 @@ public class PokemonListPresenterImpl extends BasePresenterImpl<PokemonListView,
             return;
         }
         listOfPokemons.addAll(list);
+        //TODO: what if android is shit ant context() == null?
         if (context() != null) {
             view.setRecyclerViewVisible();
             view.notifyAdapterSetChanged();
