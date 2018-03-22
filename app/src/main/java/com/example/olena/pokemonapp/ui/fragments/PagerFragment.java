@@ -15,9 +15,6 @@ import com.example.olena.pokemonapp.ui.adapters.PokemonPagerAdapter;
 import com.example.olena.pokemonapp.util.Constants;
 import com.example.olena.pokemonapp.view.PagerView;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 import static android.support.v4.view.ViewPager.*;
 
@@ -26,9 +23,8 @@ import static android.support.v4.view.ViewPager.*;
  */
 public class PagerFragment extends BaseFragment<PokemonListPresenter> implements PagerView {
 
-    @BindView(R.id.pager) ViewPager pager;
+    private ViewPager pager;
     private PokemonPagerAdapter pagerAdapter;
-    private Unbinder unbinder;
     private boolean isCorrectNumberOfPagesSet;
 
     public static BaseFragment getInstance() {
@@ -43,7 +39,7 @@ public class PagerFragment extends BaseFragment<PokemonListPresenter> implements
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        unbinder = ButterKnife.bind(this, view);
+        pager = view.findViewById(R.id.pager);
         initPager();
     }
 
@@ -92,9 +88,4 @@ public class PagerFragment extends BaseFragment<PokemonListPresenter> implements
         return (int)(Math.ceil(numberOfItems/(double)Constants.ITEMS_PER_PAGE));
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        unbinder.unbind();
-    }
 }

@@ -7,13 +7,11 @@ import android.view.ViewGroup;
 
 import com.example.olena.pokemonapp.R;
 import com.example.olena.pokemonapp.presenter.PokemonListPresenter;
-import com.example.olena.pokemonapp.ui.holders.PokemonViewHolder;
+import com.example.olena.pokemonapp.ui.adapters.holders.PokemonViewHolder;
 
 public class PokemonRecyclerAdapter extends RecyclerView.Adapter<PokemonViewHolder> {
 
     private PokemonListPresenter pokemonListPresenter;
-
-    //TODO: package managment - put holder inside adapters package
 
     public PokemonRecyclerAdapter(PokemonListPresenter pokemonListPresenter) {
         this.pokemonListPresenter = pokemonListPresenter;

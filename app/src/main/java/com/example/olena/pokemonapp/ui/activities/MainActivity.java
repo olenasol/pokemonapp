@@ -21,13 +21,12 @@ public class MainActivity extends BaseActivity implements FragmentManager.OnBack
         setContentView(R.layout.activity_main);
         if(savedInstanceState!=null){
             Fragment fragment = getSupportFragmentManager().getFragment(savedInstanceState, Constants.SAVED_FRAGMENT);
-            currentFragment = (BaseFragment)fragment;
-            setCurrentFragment(currentFragment);
+            currentFragment = (BaseFragment) fragment;
         }
         else {
             currentFragment = PagerFragment.getInstance();
-            setCurrentFragment(currentFragment);
         }
+        setCurrentFragment(currentFragment);
         replaceFragment(currentFragment,false);
 
     }
@@ -69,7 +68,6 @@ public class MainActivity extends BaseActivity implements FragmentManager.OnBack
         retrieveFragmentInHolder();
     }
 
-    //TODO: wtf?
     private void retrieveFragmentInHolder(){
         BaseFragment fragment = (BaseFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_holder);

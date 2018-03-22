@@ -11,6 +11,8 @@ public interface PokemonListInteractor extends BaseInteractor {
 
     void fillPokemonDb(List<PokemonComplexItem> list);
 
-    List<PokemonComplexItem> getPokemonsFromDb(int pageNumber) throws ExecutionException,
+    void getPokemonsFromDb(int pageNumber) throws ExecutionException,
             InterruptedException;
+
+    List<PokemonComplexItem> getListPokemonComplex();
 }

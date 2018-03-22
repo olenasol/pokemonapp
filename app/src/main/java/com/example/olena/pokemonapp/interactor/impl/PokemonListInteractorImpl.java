@@ -13,9 +13,9 @@ import com.example.olena.pokemonapp.model.ListPageItem;
 import com.example.olena.pokemonapp.model.PokemonComplexItem;
 import com.example.olena.pokemonapp.model.PokemonSimpleItem;
 import com.example.olena.pokemonapp.presenter.PokemonListPresenter;
+import com.example.olena.pokemonapp.rest.PokemonClient;
 import com.example.olena.pokemonapp.util.Constants;
 import com.example.olena.pokemonapp.util.ImageUtil;
-import com.example.olena.pokemonapp.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,12 +34,18 @@ public class PokemonListInteractorImpl extends BaseInteractorImpl<PokemonListPre
 
     public PokemonListInteractorImpl(PokemonListPresenter pokemonListPresenter) {
         this.presenter = pokemonListPresenter;
+        this.listComplexPokemons = new ArrayList<>();
     }
 
+    @Override
+    public List<PokemonComplexItem> getListPokemonComplex() {
+        return listComplexPokemons;
+    }
 
     @Override
     public void retrieveListOfComplexPokemons(final int pageNumber) {
-        Util.createCallAPI()
+        listComplexPokemons.clear();
+        PokemonClient.createCallAPI()
                 .getPokemonsListPage(Constants.ITEMS_PER_PAGE, pageNumber * Constants.ITEMS_PER_PAGE)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -77,20 +83,19 @@ public class PokemonListInteractorImpl extends BaseInteractorImpl<PokemonListPre
     }
 
     @Override
-    public List<PokemonComplexItem> getPokemonsFromDb(int pageNumber)
+    public void getPokemonsFromDb(int pageNumber)
             throws ExecutionException, InterruptedException {
-        return new GetPokemonsAsyncTask(AppDatabase.getAppDatabase(context())).execute(pageNumber).get();
+        listComplexPokemons = new GetPokemonsAsyncTask(AppDatabase.getAppDatabase(context())).execute(pageNumber).get();
     }
 
     private void getListOfPokemonsFromPageItem(ListPageItem listPageItem, final int pageNumber) {
-        listComplexPokemons = new ArrayList<>();
         for (final PokemonSimpleItem item : listPageItem.getListPokemonLinks()) {
             if (context() == null) {
                 break;
             }
             //TODO: ну бляяяяяяяяяяяяяяяяяяяяяяяяя!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            Util.createCallAPI()
-                    .getPokemonById(Util.getIdFromLink(item.getPokemonDetailsUri()))
+            PokemonClient.createCallAPI()
+                    .getPokemonById(item.getPokemonId())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Observer<PokemonComplexItem>() {
@@ -113,7 +118,7 @@ public class PokemonListInteractorImpl extends BaseInteractorImpl<PokemonListPre
 
                         @Override
                         public void onNext(PokemonComplexItem pokemonComplexItem) {
-                            pokemonComplexItem.setPokemonId(Util.getIdFromLink(item.getPokemonDetailsUri()));
+                            pokemonComplexItem.setPokemonId(item.getPokemonId());
                             pokemonComplexItem.setPageNumber(pageNumber);
                             pokemonComplexItem.getSpritePokemon()
                                     .setImage(ImageUtil

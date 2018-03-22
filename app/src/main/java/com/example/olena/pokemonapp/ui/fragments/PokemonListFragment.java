@@ -21,20 +21,13 @@ import com.example.olena.pokemonapp.ui.adapters.PokemonRecyclerAdapter;
 import com.example.olena.pokemonapp.util.Constants;
 import com.example.olena.pokemonapp.view.PokemonListView;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 public class PokemonListFragment extends BaseFragment<PokemonListPresenter> implements PokemonListView {
 
     private static final String PAGE_ID = "page_id";
 
-    @BindView(R.id.pokemonListRecycler)
-            //TODO: don't call variable listview if its recyclerview
-    RecyclerView pokemonListView;
-    @BindView(R.id.progressBar)
-    ProgressBar progressBar;
-    private Unbinder unbinder;
+    private RecyclerView pokemonRecycler;
+    private ProgressBar progressBar;
 
     public static BaseFragment getInstance(int pageNum) {
         BaseFragment fragment = new PokemonListFragment();
@@ -55,26 +48,25 @@ public class PokemonListFragment extends BaseFragment<PokemonListPresenter> impl
         if (getArguments() != null) {
             presenter = new PokemonListPresenterImpl(this, getArguments().getInt(PAGE_ID, 0));
         }
-        initializePokemonListView(view);
+        initUI(view);
+        initializePokemonListView();
         if (savedInstanceState != null) {
-            pokemonListView.scrollToPosition(savedInstanceState.getInt(Constants.LIST_POS));
+            pokemonRecycler.scrollToPosition(savedInstanceState.getInt(Constants.LIST_POS));
         }
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
+    private void initUI(View view) {
+        pokemonRecycler = view.findViewById(R.id.pokemonListRecycler);
+        progressBar = view.findViewById(R.id.progressBar);
+        setHasOptionsMenu(true);
     }
 
-    private void initializePokemonListView(View view) {
-        unbinder = ButterKnife.bind(this, view);
-        setHasOptionsMenu(true);
+    private void initializePokemonListView() {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         RecyclerView.Adapter recyclerViewAdapter = new PokemonRecyclerAdapter(presenter);
 
-        pokemonListView.setLayoutManager(layoutManager);
-        pokemonListView.setAdapter(recyclerViewAdapter);
+        pokemonRecycler.setLayoutManager(layoutManager);
+        pokemonRecycler.setAdapter(recyclerViewAdapter);
         presenter.getPokemonList();
     }
 
@@ -82,22 +74,21 @@ public class PokemonListFragment extends BaseFragment<PokemonListPresenter> impl
     public void notifyAdapterSetChanged() {
         LayoutAnimationController controller =
                 AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_fall_down);
-        pokemonListView.setLayoutAnimation(controller);
-        pokemonListView.getAdapter().notifyDataSetChanged();
-        pokemonListView.scheduleLayoutAnimation();
-    }
-
-    //TODO: you could make one method with boolean parameter, easier to read!
-    @Override
-    public void setProgressbarVisible() {
-        progressBar.setVisibility(View.VISIBLE);
-        pokemonListView.setVisibility(View.GONE);
+        pokemonRecycler.setLayoutAnimation(controller);
+        pokemonRecycler.getAdapter().notifyDataSetChanged();
+        pokemonRecycler.scheduleLayoutAnimation();
     }
 
     @Override
-    public void setRecyclerViewVisible() {
-        progressBar.setVisibility(View.GONE);
-        pokemonListView.setVisibility(View.VISIBLE);
+    public void isProgressbarVisible(boolean isVisible) {
+        if(isVisible) {
+            progressBar.setVisibility(View.VISIBLE);
+            pokemonRecycler.setVisibility(View.GONE);
+        }
+        else {
+            progressBar.setVisibility(View.GONE);
+            pokemonRecycler.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -111,7 +102,7 @@ public class PokemonListFragment extends BaseFragment<PokemonListPresenter> impl
         switch (item.getItemId()) {
             case R.id.action_refresh:
                 presenter.refetchPokemonsFromServer();
-                pokemonListView.getLayoutManager().scrollToPosition(0);
+                pokemonRecycler.getLayoutManager().scrollToPosition(0);
             default:
                 return super.onOptionsItemSelected(item);
 
@@ -120,8 +111,8 @@ public class PokemonListFragment extends BaseFragment<PokemonListPresenter> impl
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        if (pokemonListView != null) {
-            outState.putInt(Constants.LIST_POS, ((LinearLayoutManager) pokemonListView.getLayoutManager())
+        if (pokemonRecycler != null) {
+            outState.putInt(Constants.LIST_POS, ((LinearLayoutManager) pokemonRecycler.getLayoutManager())
                     .findFirstCompletelyVisibleItemPosition());
         }
         super.onSaveInstanceState(outState);

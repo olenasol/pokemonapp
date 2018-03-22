@@ -13,14 +13,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.olena.pokemonapp.R;
+import com.example.olena.pokemonapp.model.PokemonComplexItem;
 import com.example.olena.pokemonapp.presenter.PokemonDetailsPresenter;
 import com.example.olena.pokemonapp.presenter.impl.PokemonDetailsPresenterImpl;
 import com.example.olena.pokemonapp.ui.adapters.ActivityRecyclerAdapter;
 import com.example.olena.pokemonapp.view.PokemonDetailsView;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,13 +27,11 @@ public class PokemonDetailsFragment extends BaseFragment<PokemonDetailsPresenter
 
     private static final String CHOOSEN_POKEMON_ID = "pokemon id";
 
-    @BindView(R.id.pokemonImgViewDetails) ImageView pokemonImgView;
-    @BindView(R.id.pokemonNameTxtDetails) TextView pokemonNameTxt;
-    @BindView(R.id.weightTxt) TextView pokemonWeightTxt;
-    @BindView(R.id.heightTxt) TextView pokemonHeightTxt;
-    @BindView(R.id.activitiesResView) RecyclerView activitiesResView;
-    private Unbinder unbinder;
-
+    private ImageView pokemonImgView;
+    private TextView pokemonNameTxt;
+    private TextView pokemonWeightTxt;
+    private TextView pokemonHeightTxt;
+    private RecyclerView activitiesResView;
 
     public static BaseFragment getInstance(int id) {
         PokemonDetailsFragment fragment = new PokemonDetailsFragment();
@@ -53,7 +49,7 @@ public class PokemonDetailsFragment extends BaseFragment<PokemonDetailsPresenter
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        unbinder = ButterKnife.bind(this,view);
+        initUI(view);
         presenter = new PokemonDetailsPresenterImpl(this);
         setPokemonActivityList();
         if(getArguments()!=null) {
@@ -61,10 +57,19 @@ public class PokemonDetailsFragment extends BaseFragment<PokemonDetailsPresenter
         }
     }
 
+    private void initUI(View view) {
+        pokemonImgView = view.findViewById(R.id.pokemonImgViewDetails);
+        pokemonNameTxt = view.findViewById(R.id.pokemonNameTxtDetails);
+        pokemonWeightTxt = view.findViewById(R.id.weightTxt);
+        pokemonHeightTxt = view.findViewById(R.id.heightTxt);
+        activitiesResView =view.findViewById(R.id.activitiesResView);
+    }
+
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        unbinder.unbind();
+    public void setPokemonUI(PokemonComplexItem pokemonItem) {
+        pokemonNameTxt.setText(pokemonItem.getPokemonName());
+        pokemonHeightTxt.setText(String.valueOf(pokemonItem.getPokemonHeight()));
+        pokemonWeightTxt.setText(String.valueOf(pokemonItem.getPokemonWeight()));
     }
 
     @Override
@@ -72,20 +77,6 @@ public class PokemonDetailsFragment extends BaseFragment<PokemonDetailsPresenter
         pokemonImgView.setImageBitmap(bitmap);
     }
 
-    @Override
-    public void setPokemonName(String name) {
-        pokemonNameTxt.setText(name);
-    }
-
-    @Override
-    public void setPokemonWeight(int weight) {
-        pokemonWeightTxt.setText(String.valueOf(weight));
-    }
-
-    @Override
-    public void setPokemonHeight(int height) {
-        pokemonHeightTxt.setText(String.valueOf(height));
-    }
 
     private void setPokemonActivityList() {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());

@@ -20,8 +20,6 @@ public class PokemonDetailsPresenterImpl extends BasePresenterImpl<PokemonDetail
     public PokemonDetailsPresenterImpl(PokemonDetailsView pokemonDetailsView) {
         this.view = pokemonDetailsView;
         this.interactor = new PokemonDetailsInteractorImpl(this);
-       // pokemon = new PokemonComplexItem("",0,0,new SpritePokemon(""));
-       // pokemon.setListOfAbilities(new ArrayList<AbilityWrapperItem>());
     }
 
     @Override
@@ -41,10 +39,7 @@ public class PokemonDetailsPresenterImpl extends BasePresenterImpl<PokemonDetail
             pokemon = interactor.getPokemonFromDbById(id);
             //TODO: make little class PokemonDetailsPojo and make one method instead!
             view.setPokemonImg(ImageUtil.byteArrToBitmap(pokemon.getSpritePokemon().getImage()));
-            view.setPokemonName(pokemon.getPokemonName());
-            view.setPokemonWeight(pokemon.getPokemonWeight());
-            view.setPokemonHeight(pokemon.getPokemonHeight());
-            //view.notifyAdapterSetChanged();
+            view.setPokemonUI(pokemon);
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
